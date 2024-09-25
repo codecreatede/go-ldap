@@ -2,7 +2,7 @@ golang-ldap
 
 - configures and runs LDAP servers
 - writes and also allows for the update of the LDFI
-
+- assign the password to the user using the DN(distingushed name to authenticate in the server)
 ```
 [gauravsablok@ultramarine]~/Desktop/codecreatede/golang/golang-ldap% \
 go run main.go -h
@@ -22,7 +22,9 @@ Flags:
   -h, --help   help for command
 
 Use "command [command] --help" for more information about a command.
-
+```
+- create new user using the ldif files.
+```
 [gauravsablok@ultramarine]~/Desktop/codecreatede/golang/golang-ldap% \
 go run main.go ldif -h
 install and created the new user using the ldif files
@@ -44,6 +46,22 @@ Usage:
 
 Flags:
   -h, --help   help for ldap
+```
+- modify the user using the ldif files
+```
+[gauravsablok@ultramarine]~/Desktop/codecreatede/golang/golang-ldap% 
+go run main.go modify -h
+modify and add the modified ldif file
+
+Usage:
+  command modify [flags]
+
+Flags:
+  -h, --help                help for modify
+  -d, --modifydn string     authenatication ldap server (default "modify distinuished name authentication")
+  -m, --modifyuser string   modified ldif file (default "path to the modified user ldif file")
+  -e, --userldif string     ldif file (default "path to the new ldif file")
+
 ```
 
 Gaurav Sablok

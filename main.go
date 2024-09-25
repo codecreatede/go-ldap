@@ -21,11 +21,14 @@ import (
 )
 
 var (
-	passwd        string
-	usernameentry string
-	dnentry       string
-	userdn        string
-	pathldif      string
+	passwd         string
+	usernameentry  string
+	dnentry        string
+	userdn         string
+	pathldif       string
+	modifyuserpass string
+	modifydn       string
+	userldif       string
 )
 
 func main() {
@@ -57,6 +60,12 @@ var passCmd = &cobra.Command{
 	Run:  passUser,
 }
 
+var modifyCmd = &cobra.Command{
+	Use:  "modify",
+	Long: "modify and add the modified ldif file",
+	Run:  modifyUser,
+}
+
 func init() {
 	passCmd.Flags().
 		StringVarP(&passwd, "pass", "p", "password that you want to give", "password for the user group")
@@ -68,9 +77,16 @@ func init() {
 		StringVarP(&userdn, "dnentryuser", "u", "specify the dn entry for the user", "entry point for the username")
 	ldifCmd.Flags().
 		StringVarP(&pathldif, "pathldif", "l", "path to the ldif file for the new user", "user ldif file")
+	modifyCmd.Flags().
+		StringVarP(&modifyuserpass, "modifyuser", "m", "path to the modified user ldif file", "modified ldif file")
+	modifyCmd.Flags().
+		StringVarP(&modifydn, "modifydn", "d", "modify distinuished name authentication", "authenatication ldap server")
+	modifyCmd.Flags().
+		StringVarP(&userldif, "userldif", "e", "path to the new ldif file", "ldif file")
 	rootCmd.AddCommand(ldapCmd)
 	rootCmd.AddCommand(ldifCmd)
 	rootCmd.AddCommand(passCmd)
+	rootCmd.AddCommand(modifyCmd)
 }
 
 func ldapInstall(cmd *cobra.Command, args []string) {
@@ -90,7 +106,7 @@ func ldifUser(cmd *cobra.Command, args []string) {
 	install, err := exec.Command("ldappassswd", "-s", arg1, "-W", "-D", arg3, "-X", arg2).Output()
 	if err != nil {
 		log.Fatal(err)
-		fmt.Println(install)
+		fmt.Println(string(install))
 	}
 }
 
@@ -101,6 +117,19 @@ func passUser(cmd *cobra.Command, args []string) {
 	userinstall, err := exec.Command("ldapadd", "-x", "-W", "-D", args1, "-f", args2).Output()
 	if err != nil {
 		log.Fatal(err)
-		fmt.Println(userinstall)
+		fmt.Println(string(userinstall))
+	}
+}
+
+func modifyUser(cmd *cobra.Command, args []string) {
+	args1 := modifyuserpass
+	args2 := modifydn
+	args3 := userldif
+
+	modifyuser, err := exec.Command("ldapmodify", "-X", "-D", args1, "-W", args2, "-H", "ldap:// -f", args3).
+		Output()
+	if err != nil {
+		log.Fatal(err)
+		fmt.Println(string(modifyuser))
 	}
 }
