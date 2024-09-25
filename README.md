@@ -63,5 +63,26 @@ Flags:
   -e, --userldif string     ldif file (default "path to the new ldif file")
 
 ```
+- add to add the new user to the LDAP system. 
+
+```
+[gauravsablok@ultramarine]~/Desktop/codecreatede/golang/golang-ldap% \
+go run main.go add -h
+add the user to the LDAP
+
+Usage:
+  command add [flags]
+
+Flags:
+  -U, --adduserdn string    name dn authentication (default "user distinguished name to authenaticate")
+  -h, --help                help for add
+  -W, --passwdUser string   password token (default "password for the user uid")
+  -e, --userldif string     ldif file (default "path to the new ldif file")
+```
+
+
+
+
+
 
 Gaurav Sablok

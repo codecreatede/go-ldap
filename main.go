@@ -7,7 +7,8 @@ Universitat Potsdam
 Date 2024-9-24
 
 A LDAP LDIF configuration system management for installing and managing the LDAP
-systems and server.
+systems and server. It allows for the user to add, modify and set password and also allows
+for the user to add the configuration for the LDAP servers and also install the LDAP servers.
 
 
 */
@@ -29,6 +30,9 @@ var (
 	modifyuserpass string
 	modifydn       string
 	userldif       string
+	addUserdn      string
+	passwdUser     string
+	ldifadd        string
 )
 
 func main() {
@@ -66,6 +70,12 @@ var modifyCmd = &cobra.Command{
 	Run:  modifyUser,
 }
 
+var addUserCmd = &cobra.Command{
+	Use:  "add",
+	Long: "add the user to the LDAP",
+	Run:  addUser,
+}
+
 func init() {
 	passCmd.Flags().
 		StringVarP(&passwd, "pass", "p", "password that you want to give", "password for the user group")
@@ -83,10 +93,17 @@ func init() {
 		StringVarP(&modifydn, "modifydn", "d", "modify distinuished name authentication", "authenatication ldap server")
 	modifyCmd.Flags().
 		StringVarP(&userldif, "userldif", "e", "path to the new ldif file", "ldif file")
+	addUserCmd.Flags().
+		StringVarP(&ldifadd, "userldif", "e", "path to the new ldif file", "ldif file")
+	addUserCmd.Flags().
+		StringVarP(&addUserdn, "adduserdn", "U", "user distinguished name to authenaticate", "name dn authentication")
+	addUserCmd.Flags().
+		StringVarP(&passwdUser, "passwdUser", "W", "password for the user uid", "password token")
 	rootCmd.AddCommand(ldapCmd)
 	rootCmd.AddCommand(ldifCmd)
 	rootCmd.AddCommand(passCmd)
 	rootCmd.AddCommand(modifyCmd)
+	rootCmd.AddCommand(addUserCmd)
 }
 
 func ldapInstall(cmd *cobra.Command, args []string) {
@@ -131,5 +148,18 @@ func modifyUser(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatal(err)
 		fmt.Println(string(modifyuser))
+	}
+}
+
+func addUser(cmd *cobra.Command, args []string) {
+	args1 := addUserdn
+	args2 := passwdUser
+	args3 := ldifadd
+
+	adduser, err := exec.Command("ldapadd", "-X", args1, "-W", args2, "-H", "ldap://", "-f", args3).
+		Output()
+	if err != nil {
+		log.Fatal(err)
+		fmt.Println(string(adduser))
 	}
 }
