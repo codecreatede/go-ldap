@@ -4,7 +4,7 @@ package main
 
 Author Gaurav Sablok
 Universitat Potsdam
-Date 2024-9-24
+Date 2024-10-9
 
 A LDAP LDIF configuration system management for installing and managing the LDAP
 systems and server. It allows for the user to add, modify and set password and also allows
@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -111,8 +112,10 @@ func ldapInstall(cmd *cobra.Command, args []string) {
 		Output()
 	if err != nil {
 		log.Fatal(err)
-		fmt.Println(string(out))
 	}
+	timeRun := time.Now()
+	timeAdd := timeRun.String()
+	fmt.Println(string(out) + timeAdd)
 }
 
 func ldifUser(cmd *cobra.Command, args []string) {
@@ -123,8 +126,10 @@ func ldifUser(cmd *cobra.Command, args []string) {
 	install, err := exec.Command("ldappassswd", "-s", arg1, "-W", "-D", arg3, "-X", arg2).Output()
 	if err != nil {
 		log.Fatal(err)
-		fmt.Println(string(install))
 	}
+	timeRun := time.Now()
+	timeAdd := timeRun.String()
+	fmt.Println(string(install) + timeAdd)
 }
 
 func passUser(cmd *cobra.Command, args []string) {
@@ -134,8 +139,10 @@ func passUser(cmd *cobra.Command, args []string) {
 	userinstall, err := exec.Command("ldapadd", "-x", "-W", "-D", args1, "-f", args2).Output()
 	if err != nil {
 		log.Fatal(err)
-		fmt.Println(string(userinstall))
 	}
+	timeRun := time.Now()
+	timeAdd := timeRun.String()
+	fmt.Println(string(userinstall) + timeAdd)
 }
 
 func modifyUser(cmd *cobra.Command, args []string) {
@@ -147,8 +154,10 @@ func modifyUser(cmd *cobra.Command, args []string) {
 		Output()
 	if err != nil {
 		log.Fatal(err)
-		fmt.Println(string(modifyuser))
 	}
+	timeRun := time.Now()
+	timeAdd := timeRun.String()
+	fmt.Println(string(modifyuser) + timeAdd)
 }
 
 func addUser(cmd *cobra.Command, args []string) {
@@ -160,6 +169,8 @@ func addUser(cmd *cobra.Command, args []string) {
 		Output()
 	if err != nil {
 		log.Fatal(err)
-		fmt.Println(string(adduser))
 	}
+	timeRun := time.Now()
+	timeAdd := timeRun.String()
+	fmt.Println(string(adduser) + timeAdd)
 }
